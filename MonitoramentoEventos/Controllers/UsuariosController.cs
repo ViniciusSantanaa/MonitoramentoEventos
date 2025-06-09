@@ -19,21 +19,17 @@ namespace MonitoramentoEventos.Controllers
             _context = context;
         }
 
-     
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
-           
             return await _context.Usuarios
                 .Include(u => u.Alertas)
                 .ToListAsync();
         }
 
-        
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
-            
             var usuario = await _context.Usuarios
                 .Include(u => u.Alertas)
                 .FirstOrDefaultAsync(u => u.Id == id);
@@ -46,14 +42,11 @@ namespace MonitoramentoEventos.Controllers
             return usuario;
         }
 
-       
         [HttpPost]
         public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
         {
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
-
-           
             return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
         }
 
@@ -75,7 +68,7 @@ namespace MonitoramentoEventos.Controllers
             {
                 if (!UsuarioExists(id))
                 {
-                    return NotFound(); 
+                    return NotFound();
                 }
                 else
                 {
@@ -86,7 +79,6 @@ namespace MonitoramentoEventos.Controllers
             return NoContent();
         }
 
-        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
@@ -102,7 +94,6 @@ namespace MonitoramentoEventos.Controllers
             return NoContent();
         }
 
-    
         private bool UsuarioExists(int id)
         {
             return _context.Usuarios.Any(e => e.Id == id);

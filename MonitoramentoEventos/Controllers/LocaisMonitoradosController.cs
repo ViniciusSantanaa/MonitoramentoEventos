@@ -19,46 +19,40 @@ namespace MonitoramentoEventos.Controllers
             _context = context;
         }
 
-        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<LocalMonitorado>>> GetLocaisMonitorados()
         {
-           
             return await _context.LocaisMonitorados.ToListAsync();
         }
 
-       
         [HttpGet("{id}")]
         public async Task<ActionResult<LocalMonitorado>> GetLocalMonitorado(int id)
         {
-       
             var localMonitorado = await _context.LocaisMonitorados.FindAsync(id);
 
             if (localMonitorado == null)
             {
-                return NotFound(); 
+                return NotFound();
+            }
 
             return localMonitorado;
         }
 
-      
         [HttpPost]
         public async Task<ActionResult<LocalMonitorado>> PostLocalMonitorado(LocalMonitorado localMonitorado)
         {
             _context.LocaisMonitorados.Add(localMonitorado);
             await _context.SaveChangesAsync();
-
-           
             return CreatedAtAction(nameof(GetLocalMonitorado), new { id = localMonitorado.Id }, localMonitorado);
         }
 
-        
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLocalMonitorado(int id, LocalMonitorado localMonitorado)
         {
             if (id != localMonitorado.Id)
             {
-                return BadRequest(); 
+                return BadRequest();
+            }
 
             _context.Entry(localMonitorado).State = EntityState.Modified;
 
@@ -70,7 +64,7 @@ namespace MonitoramentoEventos.Controllers
             {
                 if (!LocalMonitoradoExists(id))
                 {
-                    return NotFound(); 
+                    return NotFound();
                 }
                 else
                 {
@@ -78,10 +72,9 @@ namespace MonitoramentoEventos.Controllers
                 }
             }
 
-            return NoContent(); 
+            return NoContent();
         }
 
-       
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLocalMonitorado(int id)
         {

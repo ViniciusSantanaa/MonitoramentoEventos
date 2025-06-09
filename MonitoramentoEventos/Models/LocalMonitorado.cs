@@ -1,4 +1,6 @@
-﻿namespace MonitoramentoEventos.Models
+﻿using System.Collections.Generic;
+
+namespace MonitoramentoEventos.Models
 {
     public class LocalMonitorado
     {

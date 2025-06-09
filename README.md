@@ -1,265 +1,88 @@
-Monitoramento de Eventos API
-📝 Descrição
-Esta é uma API RESTful desenvolvida em .NET 7 para um sistema de monitoramento de eventos. A API permite gerenciar usuários, locais monitorados e os alertas gerados, fornecendo um backend robusto para uma aplicação cliente.
+# 🌐 Monitoramento de Eventos - Global Solution 2025 (.NET API)
 
-O projeto utiliza Entity Framework Core para o mapeamento objeto-relacional (ORM) e se conecta a um banco de dados SQL Server. A documentação da API é gerada automaticamente e pode ser visualizada interativamente através do Swagger (OpenAPI).
+Este projeto é uma API REST desenvolvida em C# com ASP.NET Core, parte da entrega da disciplina *Advanced Business Development with .NET* da FIAP. A aplicação permite o cadastro e o gerenciamento de **usuários**, **alertas** e **locais monitorados**, sendo ideal para situações de emergência como enchentes ou desastres naturais.
 
-🔗 Link do Repositório
-O código-fonte completo deste projeto está disponível no GitHub:
+## 🛠 Tecnologias Utilizadas
+
+- ASP.NET Core 7.0
+- Entity Framework Core
+- SQL Server
+- Swagger (Swashbuckle)
+- Razor Pages (TagHelpers)
+- C#
+
+---
+
+## 📁 Estrutura do Projeto
+
+MonitoramentoEventos/
+├── Controllers/
+│ ├── AlertasController.cs
+│ ├── UsuariosController.cs
+│ └── LocaisMonitoradosController.cs
+├── Models/
+│ ├── Alerta.cs
+│ ├── Usuario.cs
+│ └── LocalMonitorado.cs
+├── Data/
+│ └── AppDbContext.cs
+├── Program.cs
+└── appsettings.json
 
 
-🏛️ Arquitetura e Diagramas
-A API segue uma arquitetura em camadas simples, comum em aplicações .NET, separando as responsabilidades de controllers, lógica de dados e modelos.
+---
 
-Diagrama da Arquitetura
+## 🧠 Requisitos Atendidos
 
-    graph TD
+- [x] API REST com boas práticas
+- [x] Banco de dados relacional (SQL Server)
+- [x] Relacionamento 1:N (Usuário → Alertas; Local → Alertas)
+- [x] Swagger para documentação
+- [x] Migrations aplicadas
+- [x] Razor com TagHelpers
 
-    A[Cliente (Ex: App Web/Mobile)] --> B{API Gateway / Roteamento ASP.NET};
-    
-    B --> C[Controllers];
-    
-    C --> D{DbContext (Entity Framework)};
-    
-    D <--> E[Banco de Dados (SQL Server)];
-    
+---
 
-    subgraph "Camada da API"
-        B
-        C
-    end
+## 🔁 Relacionamentos
 
-    subgraph "Camada de Dados"
-        D
-    end
+- Um **Usuário** pode ter vários **Alertas**.
+- Um **LocalMonitorado** pode conter vários **Alertas**.
+- Cada **Alerta** pertence a exatamente um **Usuário** e um **LocalMonitorado**.
 
-    subgraph "Infraestrutura"
-        E
-    end
+---
 
-🛠️ Tecnologias Utilizadas
-.NET 7: Framework para construção da aplicação.
+## 🧪 Testes com Swagger
 
-ASP.NET Core: Para criar a API RESTful.
+Acesse o Swagger via:
+https://localhost:porta da api/swagger
 
-Entity Framework Core 7: Para a camada de acesso a dados.
 
-SQL Server: Banco de dados relacional.
+Exemplo de criação de um Alerta (POST `/api/alertas`):
 
-Swagger (Swashbuckle): Para documentação e teste interativo da API.
-
-📂 Estrutura do Projeto
-/Models: Contém as classes de entidade que representam as tabelas do banco de dados (Usuario, LocalMonitorado, Alerta).
-
-/Data: Contém o DbContext (AppDbContext.cs), responsável pela comunicação com o banco de dados.
-
-/Controllers: Contém os controladores da API, que expõem os endpoints para cada entidade.
-
-appsettings.json: Arquivo de configuração (incluindo a string de conexão).
-
-Program.cs: Arquivo de inicialização da aplicação (configuração de serviços e middleware).
-
-🚀 Desenvolvimento
-Siga os passos abaixo para configurar e executar o projeto localmente.
-
-1. Pré-requisitos
-.NET 7 SDK
-
-SQL Server (Express ou outra edição)
-
-Um editor de código como Visual Studio ou VS Code.
-
-2. Configuração do Ambiente
-Clone o Repositório:
-
-git clone https://github.com/ViniciusSantanaa/MonitoramentoEventos.git
-cd MonitoramentoEventos
-
-Configure a String de Conexão:
-Abra o arquivo appsettings.json e altere a DefaultConnection para apontar para o seu banco de dados SQL Server.
-
+```json
 {
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=SEU_SERVIDOR;Database=MonitoramentoDb;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True;"
-  }
+  "mensagem": "Enchente no centro!",
+  "usuarioId": 1,
+  "localMonitoradoId": 2
+}
+▶️ Como Executar
+
+
+Clone o repositório:
+
+git clone https://github.com/seu-usuario/monitoramento-eventos.git
+
+Configure o appsettings.json:
+
+
+"ConnectionStrings": {
+  "DefaultConnection": "Server=localhost;Database=MonitoramentoEventosDb;Trusted_Connection=True;"
 }
 
-Aplique as Migrations:
-Para criar o banco de dados e as tabelas, execute os seguintes comandos no terminal:
 
-# Instalar a ferramenta do EF Core (se ainda não tiver)
-dotnet tool install --global dotnet-ef
+Aplique as migrations:
 
-# Aplicar as migrations para criar o banco de dados
+dotnet ef migrations add InitialCreate
 dotnet ef database update
 
-3. Executando a Aplicação
-Pela linha de comando:
-
-dotnet run
-
-Pelo Visual Studio:
-Abra a solução (.sln) e pressione F5.
-
-🧪 Testes e Exemplos de Uso
-A forma mais simples de testar a API é utilizando a interface do Swagger.
-
-1. Acesso via Swagger
-Após executar a aplicação, acesse a seguinte URL no seu navegador:
-
-URL do Swagger: https://localhost:<PORTA>/swagger
-
-Você verá uma página interativa com todos os endpoints disponíveis, onde poderá testá-los diretamente.
-
-2. Exemplos de Requisições
-Abaixo estão exemplos de corpos (body) de requisição em formato JSON para os endpoints POST.
-
-Criar um novo Usuário
-Endpoint: POST /api/Usuarios
-
-Corpo (JSON):
-
-{
-  "nome": "João da Silva",
-  "email": "joao.silva@example.com"
-}
-
-Criar um novo Local Monitorado
-Endpoint: POST /api/LocaisMonitorados
-
-Corpo (JSON):
-
-{
-  "nome": "Escritório Central",
-  "endereco": "Rua das Flores, 123, São Paulo, SP"
-}
-
-Criar um novo Alerta
-Endpoint: POST /api/Alertas
-
-Corpo (JSON):
-
-{
-  "descricao": "Movimento suspeito detectado na entrada principal.",
-  "dataHora": "2024-10-27T14:30:00",
-  "status": "Aberto",
-  "usuarioId": 1,
-  "localId": 1
-}
-
-Nota: Os valores de usuarioId e localId devem corresponder a IDs existentes no banco de dados.
-
-🌐 Endpoints da API
-A seguir, a lista completa dos endpoints para referência.
-
-api/Usuarios
-Verbo
-
-Rota
-
-Descrição
-
-GET
-
-/
-
-Retorna todos os usuários.
-
-GET
-
-/{id}
-
-Retorna um usuário específico pelo ID.
-
-POST
-
-/
-
-Cria um novo usuário.
-
-PUT
-
-/{id}
-
-Atualiza um usuário existente.
-
-DELETE
-
-/{id}
-
-Deleta um usuário.
-
-api/LocaisMonitorados
-Verbo
-
-Rota
-
-Descrição
-
-GET
-
-/
-
-Retorna todos os locais monitorados.
-
-GET
-
-/{id}
-
-Retorna um local específico pelo ID.
-
-POST
-
-/
-
-Cria um novo local monitorado.
-
-PUT
-
-/{id}
-
-Atualiza um local monitorado existente.
-
-DELETE
-
-/{id}
-
-Deleta um local monitorado.
-
-api/Alertas
-Verbo
-
-Rota
-
-Descrição
-
-GET
-
-/
-
-Retorna todos os alertas.
-
-GET
-
-/{id}
-
-Retorna um alerta específico pelo ID.
-
-POST
-
-/
-
-Cria um novo alerta.
-
-PUT
-
-/{id}
-
-Atualiza um alerta existente.
-
-DELETE
-
-/{id}
-
-Deleta um alerta.
-
+execute com "dotnet run"
