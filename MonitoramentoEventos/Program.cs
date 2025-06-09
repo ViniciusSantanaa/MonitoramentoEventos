@@ -1,10 +1,13 @@
-using MonitoramentoEventos.Data;
 using Microsoft.EntityFrameworkCore;
+using MonitoramentoEventos.Data;
+using Microsoft.Extensions.DependencyInjection; 
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); 
+
+builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

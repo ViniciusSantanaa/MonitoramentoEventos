@@ -1,65 +1,73 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MonitoramentoEventos.Data;
+using MonitoramentoEventos.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MonitoramentoEventos.Data;
-using MonitoramentoEventos.Models;
 
 namespace MonitoramentoEventos.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsuariosController : ControllerBase
+    public class AlertasController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public UsuariosController(AppDbContext context)
+        public AlertasController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Usuarios
+      
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+        public async Task<ActionResult<IEnumerable<Alerta>>> GetAlertas()
         {
-            return await _context.Usuarios
-                .Include(u => u.Alertas)
+           
+            return await _context.Alertas
+                .Include(a => a.Usuario)
+                .Include(a => a.Local)
                 .ToListAsync();
         }
 
-        // GET: api/Usuarios/5
+        // GET: api/Alertas/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Usuario>> GetUsuario(int id)
+        public async Task<ActionResult<Alerta>> GetAlerta(int id)
         {
-            var usuario = await _context.Usuarios
-                .Include(u => u.Alertas)
-                .FirstOrDefaultAsync(u => u.Id == id);
+            var alerta = await _context.Alertas
+                .Include(a => a.Usuario)
+                .Include(a => a.Local)
+                .FirstOrDefaultAsync(a => a.Id == id);
 
-            if (usuario == null)
+            if (alerta == null)
+            {
                 return NotFound();
+            }
 
-            return usuario;
+            return alerta;
         }
 
-        // POST: api/Usuarios
+       
         [HttpPost]
-        public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
+        public async Task<ActionResult<Alerta>> PostAlerta(Alerta alerta)
         {
-            _context.Usuarios.Add(usuario);
+            _context.Alertas.Add(alerta);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
+           
+            return CreatedAtAction(nameof(GetAlerta), new { id = alerta.Id }, alerta);
         }
 
-        // PUT: api/Usuarios/5
+      
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
+        public async Task<IActionResult> PutAlerta(int id, Alerta alerta)
         {
-            if (id != usuario.Id)
-                return BadRequest();
+            if (id != alerta.Id)
+            {
+                return BadRequest(); 
+            }
 
-            _context.Entry(usuario).State = EntityState.Modified;
+            _context.Entry(alerta).State = EntityState.Modified;
 
             try
             {
@@ -67,32 +75,39 @@ namespace MonitoramentoEventos.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UsuarioExists(id))
+                if (!AlertaExists(id))
+                {
                     return NotFound();
+                }
                 else
+                {
                     throw;
+                }
             }
 
-            return NoContent();
+            return NoContent(); 
         }
 
-        // DELETE: api/Usuarios/5
+       
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUsuario(int id)
+        public async Task<IActionResult> DeleteAlerta(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null)
+            var alerta = await _context.Alertas.FindAsync(id);
+            if (alerta == null)
+            {
                 return NotFound();
+            }
 
-            _context.Usuarios.Remove(usuario);
+            _context.Alertas.Remove(alerta);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool UsuarioExists(int id)
+       
+        private bool AlertaExists(int id)
         {
-            return _context.Usuarios.Any(u => u.Id == id);
+            return _context.Alertas.Any(e => e.Id == id);
         }
     }
 }

@@ -1,65 +1,66 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MonitoramentoEventos.Data;
+using MonitoramentoEventos.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MonitoramentoEventos.Data;
-using MonitoramentoEventos.Models;
 
 namespace MonitoramentoEventos.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsuariosController : ControllerBase
+    public class LocaisMonitoradosController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public UsuariosController(AppDbContext context)
+        public LocaisMonitoradosController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Usuarios
+        
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+        public async Task<ActionResult<IEnumerable<LocalMonitorado>>> GetLocaisMonitorados()
         {
-            return await _context.Usuarios
-                .Include(u => u.Alertas)
-                .ToListAsync();
+           
+            return await _context.LocaisMonitorados.ToListAsync();
         }
 
-        // GET: api/Usuarios/5
+       
         [HttpGet("{id}")]
-        public async Task<ActionResult<Usuario>> GetUsuario(int id)
+        public async Task<ActionResult<LocalMonitorado>> GetLocalMonitorado(int id)
         {
-            var usuario = await _context.Usuarios
-                .Include(u => u.Alertas)
-                .FirstOrDefaultAsync(u => u.Id == id);
+       
+            var localMonitorado = await _context.LocaisMonitorados.FindAsync(id);
 
-            if (usuario == null)
-                return NotFound();
+            if (localMonitorado == null)
+            {
+                return NotFound(); 
 
-            return usuario;
+            return localMonitorado;
         }
 
-        // POST: api/Usuarios
+      
         [HttpPost]
-        public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
+        public async Task<ActionResult<LocalMonitorado>> PostLocalMonitorado(LocalMonitorado localMonitorado)
         {
-            _context.Usuarios.Add(usuario);
+            _context.LocaisMonitorados.Add(localMonitorado);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
+           
+            return CreatedAtAction(nameof(GetLocalMonitorado), new { id = localMonitorado.Id }, localMonitorado);
         }
 
-        // PUT: api/Usuarios/5
+        
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
+        public async Task<IActionResult> PutLocalMonitorado(int id, LocalMonitorado localMonitorado)
         {
-            if (id != usuario.Id)
-                return BadRequest();
+            if (id != localMonitorado.Id)
+            {
+                return BadRequest(); 
 
-            _context.Entry(usuario).State = EntityState.Modified;
+            _context.Entry(localMonitorado).State = EntityState.Modified;
 
             try
             {
@@ -67,32 +68,38 @@ namespace MonitoramentoEventos.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UsuarioExists(id))
-                    return NotFound();
+                if (!LocalMonitoradoExists(id))
+                {
+                    return NotFound(); 
+                }
                 else
+                {
                     throw;
+                }
             }
 
-            return NoContent();
+            return NoContent(); 
         }
 
-        // DELETE: api/Usuarios/5
+       
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUsuario(int id)
+        public async Task<IActionResult> DeleteLocalMonitorado(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null)
+            var localMonitorado = await _context.LocaisMonitorados.FindAsync(id);
+            if (localMonitorado == null)
+            {
                 return NotFound();
+            }
 
-            _context.Usuarios.Remove(usuario);
+            _context.LocaisMonitorados.Remove(localMonitorado);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool UsuarioExists(int id)
+        private bool LocalMonitoradoExists(int id)
         {
-            return _context.Usuarios.Any(u => u.Id == id);
+            return _context.LocaisMonitorados.Any(e => e.Id == id);
         }
     }
 }
