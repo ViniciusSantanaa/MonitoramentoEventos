@@ -16,31 +16,22 @@ namespace MonitoramentoEventos.Controllers
 
         public UsuariosController(AppDbContext context)
         {
+    private readonly AppDbContext _context;
+
+        public UsuariosController(AppDbContext context)
+        {
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+        public async Task<IActionResult> Index()
         {
-            return await _context.Usuarios
+            var usuarios = await _context.Usuarios
                 .Include(u => u.Alertas)
                 .ToListAsync();
+
+            return View(usuarios);
         }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Usuario>> GetUsuario(int id)
-        {
-            var usuario = await _context.Usuarios
-                .Include(u => u.Alertas)
-                .FirstOrDefaultAsync(u => u.Id == id);
-
-            if (usuario == null)
-            {
-                return NotFound();
-            }
-
-            return usuario;
-        }
+}
 
         [HttpPost]
         public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
