@@ -7,17 +7,22 @@ O projeto utiliza Entity Framework Core para o mapeamento objeto-relacional (ORM
 🔗 Link do Repositório
 O código-fonte completo deste projeto está disponível no GitHub:
 
-Repositório: https://github.com/ViniciusSantanaa/MonitoramentoEventos.git
 
 🏛️ Arquitetura e Diagramas
 A API segue uma arquitetura em camadas simples, comum em aplicações .NET, separando as responsabilidades de controllers, lógica de dados e modelos.
 
 Diagrama da Arquitetura
-graph TD
+
+    graph TD
+
     A[Cliente (Ex: App Web/Mobile)] --> B{API Gateway / Roteamento ASP.NET};
+    
     B --> C[Controllers];
+    
     C --> D{DbContext (Entity Framework)};
+    
     D <--> E[Banco de Dados (SQL Server)];
+    
 
     subgraph "Camada da API"
         B
